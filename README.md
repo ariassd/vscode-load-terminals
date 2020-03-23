@@ -20,7 +20,7 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 # License
 
-[MIT](https://github.com/shaharkazaz/vscode-git-merger/blob/master/LICENSE)
+[MIT](https://github.com/ariassd/vscode-load-terminals/blob/master/LICENSE)
 
 
 
@@ -42,7 +42,7 @@ Initial release.
 ## Help this extension be great 💪
 
 If you want to contribute or have any feedback positive or negative, let me know!  
-Contact via [Email](ariassd@gmail.com) or open an issue at this project's [Git Repo](https://github.com/ariassd).
+Contact via [Email](ariassd@gmail.com) or open an issue at this project's [Git Repo](https://github.com/ariassd/vscode-load-terminals).
 * [Luis Arias | Github](https://github.com/ariassd)  
 
 **Enjoy it!**
