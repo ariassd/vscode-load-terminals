@@ -56,5 +56,7 @@ Contact via [Email](ariassd@gmail.com) or open an issue at this project's [Git R
     name: "Luis Arias",
     year: 2020,
     important: "COVID-19 is a serious threat, take care and wash your hands!"
+    usefulHashtag: "#IStayAtHome #SafeAtHome #Covid19 #QuedateEnCasa #coronavirus"
 }
 ```
+
