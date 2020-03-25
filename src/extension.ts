@@ -3,17 +3,43 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs'
 import * as path from 'path';
+import { resolve } from 'dns';
 
+const jsonFile: ConfigurationFile = {
+    groups: [
+        {
+            name: "First group",
+            description: "First group of terminals and commands",
+            terminals: [
+                { name: "--1g-1c", path: ".", cmd: "echo first group first console!", num: 0 },
+                { name: "--1g-2c", path: ".", cmd: "echo first group second console!", num: 0 }
+            ]
+        },
+        {
+            name: "Second group",
+            description: "Second group of terminals and commands",
+            terminals: [
+                { name: "--2g-1c", path: ".", cmd: "echo Second group first console!", num: 0 },
+                { name: "--2g-2c", path: ".", cmd: "echo Second group second console!", num: 0 }
+            ]
+        }
+    ]
+};
+class ConfigurationFile {
+	groups!: TerminalGroup[];
+}
 
-const jsonFile: Terminal[] = [
-	{ name: '--cmd', path: '.', cmd: 'echo Auto load first terminal is OK!' },
-	{ name: '--cmd2', path: '.', cmd: 'echo Auto load second terminal is OK!' },
-];
+class TerminalGroup {
+	name!: string;
+	description!: string;
+	terminals!: Terminal[]
+}
 
 class Terminal {
 	name!: string;
 	path!: string;
 	cmd!: string;
+	num!: number;
 	trm?: vscode.Terminal;
 
 	constructor(name: string, path: string, cmd: string) {
@@ -70,40 +96,45 @@ export function activate(context: vscode.ExtensionContext) {
 		});
 
 	async function loadTerminals(folderPath: string) {
-		console.log(folderPath)
 		let cnf = fs.readFileSync(path.join(folderPath, conf_filename), "utf8");
-		let cnfJson: Terminal[] = JSON.parse(cnf);
+		let configuration: ConfigurationFile = JSON.parse(cnf);
 
-		await vscode.commands.executeCommand('workbench.action.terminal.new').then(async () => {
-			await delay(200);
-			let fstTerminal = vscode.window.terminals[0];
-			fstTerminal.show(true);
-			var i = 0;
-			var $wait: true;
-			if (cnfJson.length >= 2) {
-				for (i = 1; i < cnfJson.length; i++) {
-					await vscode.commands.executeCommand("workbench.action.terminal.split");
-				}
-			}
+		for(var i = 0; i <= configuration.groups.length; i++) {
+			let group = configuration.groups[i];
+			let fstTerm = await createTerminal(false, group.terminals[0]);
+			for(var j = 1; j <= group.terminals.length-1; j++) {
 
-			await delay(100);
-
-			for (i = 0; i < cnfJson.length; i++) {
-				await delay(100);
-				let element = cnfJson[i];
-				let term = vscode.window.terminals[i]
-				term.show();
-				await vscode.commands.executeCommand('workbench.action.terminal.renameWithArg', { name: element.name });
-				term.sendText(`cd ${element.path}`, true);
-				term.sendText(element.cmd, true);
-			}
-
-		});
-
+				let terminal = group.terminals[j];
+				let term = await createTerminal(true, terminal)
+				
+			};
+		};
 	}
 
 	function delay(ms: number) {
 		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	function createTerminal(horizontal: boolean, terminal: Terminal): Promise<vscode.Terminal> {
+		return new Promise<vscode.Terminal>(async resolve => {
+			var command = "workbench.action.terminal.new";
+			if (horizontal === true) {
+				command = "workbench.action.terminal.split";
+			}
+			await vscode.commands.executeCommand(command).then(async () => {
+				let listener = vscode.window.onDidOpenTerminal(async e => {
+					e.show();
+					await vscode.commands.executeCommand('workbench.action.terminal.renameWithArg', { name: terminal.name }).then(async () => {
+						e.sendText(`cd ${terminal.path}`, true);
+						e.sendText(terminal.cmd, true);
+						listener.dispose();
+						resolve(e);
+					});
+
+				});
+				
+			});
+		})
 	}
 
 	context.subscriptions.push(disposable);

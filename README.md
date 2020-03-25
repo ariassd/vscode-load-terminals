@@ -34,11 +34,16 @@ No requirements needed.
 
 ### 1.0.0
 
-Initial release.
+- Initial release.
 
 ### 1.0.1
 
-Some minor fixes
+- Some minor fixes
+
+### 1.0.2
+
+- Set icon
+- Organize terminals by groups
 
 -----------------------------------------------------------------------------------------------------------
 
