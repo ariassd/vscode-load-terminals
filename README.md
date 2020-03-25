@@ -26,7 +26,7 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ## Requirements
 
-No requirements needed.
+- Visual Studio Code 1.43.0 or higher
 
 ## Known Issues
 
@@ -44,6 +44,11 @@ No requirements needed.
 
 - Set icon
 - Organize terminals by groups
+
+### 1.0.3
+
+- Fixed: correct binding of terminal caused by manual folder selection.
+- Changed: Command name to ```TLoader: Load Terminals```
 
 -----------------------------------------------------------------------------------------------------------
 

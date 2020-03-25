@@ -3,12 +3,15 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs'
 import * as path from 'path';
-import { resolve } from 'dns';
+import { Terminal } from './Terminal';
+import { ConfigurationFile } from './ConfigurationFile';
+var packageJson: any = require('../package.json');
 
 const jsonFile: ConfigurationFile = {
+	version: packageJson.version,
     groups: [
         {
-            name: "First group",
+            name: "First group: Sample",
             description: "First group of terminals and commands",
             terminals: [
                 { name: "--1g-1c", path: ".", cmd: "echo first group first console!", num: 0 },
@@ -16,7 +19,7 @@ const jsonFile: ConfigurationFile = {
             ]
         },
         {
-            name: "Second group",
+            name: "Second group: Sample",
             description: "Second group of terminals and commands",
             terminals: [
                 { name: "--2g-1c", path: ".", cmd: "echo Second group first console!", num: 0 },
@@ -25,29 +28,6 @@ const jsonFile: ConfigurationFile = {
         }
     ]
 };
-class ConfigurationFile {
-	groups!: TerminalGroup[];
-}
-
-class TerminalGroup {
-	name!: string;
-	description!: string;
-	terminals!: Terminal[]
-}
-
-class Terminal {
-	name!: string;
-	path!: string;
-	cmd!: string;
-	num!: number;
-	trm?: vscode.Terminal;
-
-	constructor(name: string, path: string, cmd: string) {
-		this.name = name;
-		this.path = path;
-		this.cmd = cmd
-	}
-}
 
 const conf_filename: string = 'LoadTerminal.json';
 const conf_cnffolderPath: string = 'workspaceConfiguration';
@@ -80,6 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 						if (err) {
 							vscode.window.showErrorMessage("Load terminal: Default configuration file could´t be created");
 						} else {
+							vscode.window.showInformationMessage(`Configuration file was created at ${path.join(confFolderPath, conf_filename)}`)
 							loadTerminals(confFolderPath);
 						}
 
@@ -99,14 +80,15 @@ export function activate(context: vscode.ExtensionContext) {
 		let cnf = fs.readFileSync(path.join(folderPath, conf_filename), "utf8");
 		let configuration: ConfigurationFile = JSON.parse(cnf);
 
-		for(var i = 0; i <= configuration.groups.length; i++) {
+		var terminalNumber = 0;
+		for(var i = 0; i < configuration.groups.length; i++) {
 			let group = configuration.groups[i];
 			let fstTerm = await createTerminal(false, group.terminals[0]);
-			for(var j = 1; j <= group.terminals.length-1; j++) {
-
+			group.terminals[0].num = terminalNumber++;
+			for(var j = 1; j < group.terminals.length; j++) {
 				let terminal = group.terminals[j];
+				terminal.num = terminalNumber++;
 				let term = await createTerminal(true, terminal)
-				
 			};
 		};
 	}
@@ -117,16 +99,18 @@ export function activate(context: vscode.ExtensionContext) {
 
 	function createTerminal(horizontal: boolean, terminal: Terminal): Promise<vscode.Terminal> {
 		return new Promise<vscode.Terminal>(async resolve => {
-			var command = "workbench.action.terminal.new";
+			// var command = "workbench.action.terminal.new";
+			var command = "workbench.action.terminal.newInActiveWorkspace";
 			if (horizontal === true) {
 				command = "workbench.action.terminal.split";
 			}
 			await vscode.commands.executeCommand(command).then(async () => {
 				let listener = vscode.window.onDidOpenTerminal(async e => {
 					e.show();
-					await vscode.commands.executeCommand('workbench.action.terminal.renameWithArg', { name: terminal.name }).then(async () => {
-						e.sendText(`cd ${terminal.path}`, true);
-						e.sendText(terminal.cmd, true);
+					terminal.trm = e;
+					await vscode.commands.executeCommand('workbench.action.terminal.renameWithArg', {name: terminal.name}).then(async () => {
+						await e.sendText(`cd ${terminal.path}`, true);
+						await e.sendText(terminal.cmd, true);
 						listener.dispose();
 						resolve(e);
 					});
