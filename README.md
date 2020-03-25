@@ -17,6 +17,8 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 * ```Load terminals``` - Open pre configured terminals in file ```LoadTerminal.json``` 
 
+![explorer](assets/Sample.gif)
+
 
 # License
 
