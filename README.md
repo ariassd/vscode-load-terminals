@@ -15,7 +15,7 @@ Or launch the vscode quick open (<kbd>⌘</kbd>+<kbd>p</kbd>  | <kbd>Ctrl</kbd>+
 ## Commands 🗣
 The extension commands that can be accessed from the command pallet (<kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> ):
 
-* ```Load terminals``` - Open pre configured terminals in file ```LoadTerminal.json``` 
+* ```TLoader: Load Terminals``` - Open pre configured terminals in file ```LoadTerminal.json``` 
 
 ![explorer](assets/Sample.gif)
 
