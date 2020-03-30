@@ -17,5 +17,6 @@ export class Terminal {
 export class TerminalGroup {
 	name!: string;
 	description!: string;
+	enabled: boolean = true;
 	terminals!: Terminal[]
 }

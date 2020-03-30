@@ -52,6 +52,20 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 - Fixed: correct binding of terminal caused by manual folder selection.
 - Changed: Command name to ```TLoader: Load Terminals```
 
+### 1.0.4
+- New: New option to enable or disable a group of terminals. 
+```json
+{
+    "version": "1.0.4",
+    "groups": [
+        {
+            "name": "Group number 1",
+            "description": "Working with microservices a and b",
+            "enabled": true,
+            "terminals": [
+
+```
+
 -----------------------------------------------------------------------------------------------------------
 
 

@@ -12,7 +12,8 @@ const jsonFile: ConfigurationFile = {
     groups: [
         {
             name: "First group: Sample",
-            description: "First group of terminals and commands",
+			description: "First group of terminals and commands",
+			enabled: true,
             terminals: [
                 { name: "--1g-1c", path: ".", cmd: "echo first group first console!", num: 0 },
                 { name: "--1g-2c", path: ".", cmd: "echo first group second console!", num: 0 }
@@ -20,7 +21,8 @@ const jsonFile: ConfigurationFile = {
         },
         {
             name: "Second group: Sample",
-            description: "Second group of terminals and commands",
+			description: "Second group of terminals and commands",
+			enabled: true,
             terminals: [
                 { name: "--2g-1c", path: ".", cmd: "echo Second group first console!", num: 0 },
                 { name: "--2g-2c", path: ".", cmd: "echo Second group second console!", num: 0 }
@@ -83,13 +85,15 @@ export function activate(context: vscode.ExtensionContext) {
 		var terminalNumber = 0;
 		for(var i = 0; i < configuration.groups.length; i++) {
 			let group = configuration.groups[i];
-			let fstTerm = await createTerminal(false, group.terminals[0]);
-			group.terminals[0].num = terminalNumber++;
-			for(var j = 1; j < group.terminals.length; j++) {
-				let terminal = group.terminals[j];
-				terminal.num = terminalNumber++;
-				let term = await createTerminal(true, terminal)
-			};
+			if (group.enabled === true) {
+				let fstTerm = await createTerminal(false, group.terminals[0]);
+				group.terminals[0].num = terminalNumber++;
+				for(var j = 1; j < group.terminals.length; j++) {
+					let terminal = group.terminals[j];
+					terminal.num = terminalNumber++;
+					let term = await createTerminal(true, terminal)
+				};
+			}
 		};
 	}
 

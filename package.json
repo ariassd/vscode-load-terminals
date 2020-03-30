@@ -2,7 +2,7 @@
 	"name": "terminal-loader",
 	"displayName": "Terminal Loader",
 	"description": "Open multiple terminals in a specific location and run command",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"publisher": "ariassd",
 	"icon": "assets/ico.png",
 	"homepage": "https://github.com/ariassd/vscode-load-terminals/blob/master/README.md",
