@@ -85,7 +85,7 @@ export function activate(context: vscode.ExtensionContext) {
 		var terminalNumber = 0;
 		for(var i = 0; i < configuration.groups.length; i++) {
 			let group = configuration.groups[i];
-			if (group.enabled === true) {
+			if (group.enabled !== false) {
 				let fstTerm = await createTerminal(false, group.terminals[0]);
 				group.terminals[0].num = terminalNumber++;
 				for(var j = 1; j < group.terminals.length; j++) {

@@ -66,6 +66,9 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ```
 
+### 1.0.5
+- Fix: Compatibility with older version of configuration file
+
 -----------------------------------------------------------------------------------------------------------
 
 
