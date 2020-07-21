@@ -17,6 +17,8 @@ You can use vsce to easily package and publish your extensions:
 
 ```bash
 $ cd myExtension
+$ vsce login <publisher_name>
+# Personal Access Token for publisher '<publisher_name>': ****************************************************
 $ vsce publish patch
 # This will modify the extension's package.json version attribute before publishing the extension.
 #  increment: major, minor, or patch.
