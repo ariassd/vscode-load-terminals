@@ -4,6 +4,12 @@ https://code.visualstudio.com/api/working-with-extensions/publishing-extension
 
 https://code.visualstudio.com/api/get-started/your-first-extension
 
+Extension in market place
+https://marketplace.visualstudio.com/items?itemName=ariassd.terminal-loader
+
+Devops page.
+`https://dev.azure.com/<username>/_usersSettings/tokens`
+
 ## vsce
 
 vsce, short for "Visual Studio Code Extensions", is a command-line tool for packaging, publishing and managing VS Code extensions.
@@ -17,11 +23,16 @@ You can use vsce to easily package and publish your extensions:
 
 ```bash
 $ cd myExtension
-$ vsce login <publisher_name>
+$ vsce login <publisher_name> # Follow the instructions here
 # Personal Access Token for publisher '<publisher_name>': ****************************************************
-$ vsce publish patch
+$ vsce publish patch # Make new version and publish
 # This will modify the extension's package.json version attribute before publishing the extension.
 #  increment: major, minor, or patch.
+
+
+
+
+# Generate a version in the root folder
 $ vsce package
 # myExtension.vsix generated
 $ vsce publish
