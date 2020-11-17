@@ -32,7 +32,7 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ## Release Notes
 
-### 1.0.9
+### 1.0.10
 
 - Fixed: Security updates from dependencies applied
 
