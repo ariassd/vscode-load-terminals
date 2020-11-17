@@ -11,7 +11,7 @@
     "url": "https://github.com/ariassd/vscode-load-terminals"
   },
   "engines": {
-    "vscode": "^1.47.1"
+    "vscode": "^1.51.0"
   },
   "categories": [
     "Debuggers"
