@@ -20,17 +20,35 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ![explorer](assets/Sample.gif)
 
+## Workspace settings.
+
+#### Setting Section: `terminalLoader.config`
+
+- directory: Defines the name or location for the file `LoadTerminal.json`
+
+```json
+{
+  ...
+  "terminalLoader.config": {
+    "directory": ".vscode",
+  }
+}
+```
+
 # License
 
 [MIT](https://github.com/ariassd/vscode-load-terminals/blob/master/LICENSE)
 
 ## Requirements
 
-- Visual Studio Code 1.43.0 or higher
-
-## Known Issues
+- Visual Studio Code 1.53.0 or higher
 
 ## Release Notes
+
+### 1.1.0
+
+- Fixed: Issues lading terminals with vscode 1.53
+- New: configuration in `.vscode/settings`, now you will be able to define the folder for the file `LoadTerminal.json`
 
 ### 1.0.10
 
@@ -87,11 +105,14 @@ Contact via [Email](ariassd@gmail.com) or open an issue at this project's [Git R
 
 - [Luis Arias | Github](https://github.com/ariassd)
 
+_Thank you Nick Armitage for reporting issues._
+_Thank you Leandro Silva and Anton Olsson for suggestions._
+
 **Enjoy it!**
 
 ```
 {
     name: "Luis Arias",
-    year: 2020
+    year: 2021
 }
 ```
