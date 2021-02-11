@@ -1,13 +1,56 @@
 # Change Log
 
-All notable changes to the "terminal loader" extension will be documented in this file.
+### 1.2.0
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- New command `TLoader: Load Groups` now you can extend config file adding new groups so you can manage many additional `configurations`.
 
-## [1.0.10] - 2020-11-17
+### 1.1.0
+
+- Fixed: Issues lading terminals with vscode 1.53
+- New: configuration in `.vscode/settings`, now you will be able to define the folder for the file `LoadTerminal.json`
+
+### 1.0.10
 
 - Fixed: Security updates from dependencies applied
 
-## [1.0.8]
+### 1.0.8
 
-- Initial release
+- NPM updates
+
+### 1.0.5
+
+- Fix: Compatibility with older version of configuration file
+
+### 1.0.4
+
+- New: New option to enable or disable a group of terminals.
+
+```json
+{
+    "version": "1.0.4",
+    "groups": [
+        {
+            "name": "Group number 1",
+            "description": "Working with microservices a and b",
+            "enabled": true,
+            "terminals": [
+
+```
+
+### 1.0.3
+
+- Fixed: correct binding of terminal caused by manual folder selection.
+- Changed: Command name to `TLoader: Load Terminals`
+
+### 1.0.2
+
+- Set icon
+- Organize terminals by groups
+
+### 1.0.1
+
+- Some minor fixes
+
+### 1.0.0
+
+- Initial release.

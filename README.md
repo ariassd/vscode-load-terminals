@@ -17,8 +17,27 @@ Or launch the vscode quick open (<kbd>⌘</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<
 The extension commands that can be accessed from the command pallet (<kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> ):
 
 - `TLoader: Load Terminals` - Open pre configured terminals in file `LoadTerminal.json`
+  ⚠️ IMPORTANT: A group called `groups` must exists in the configuration file for this, you can add extra groups, but please don't remove this one!
 
 ![explorer](assets/Sample.gif)
+
+- `TLoader: Load Groups` - Open a group of terminals in file `LoadTerminal.json`. For the following example you can select groups or testEnv or both (groups,testEnv)
+
+⚠️ IMPORTANT: Too many groups or crowded groups could cause VSCode freezing or stop working!
+
+```json
+{
+  "version": "1.1.0",
+  "groups": [
+    {
+      ...
+    }
+  ],
+  "testEnv": [
+    ...
+  ]
+}
+```
 
 ## Workspace settings.
 
@@ -43,7 +62,11 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 - Visual Studio Code 1.53.0 or higher
 
-## Release Notes
+## Latest release notes
+
+### 1.2.0
+
+- New command `TLoader: Load Groups` now you can extend config file adding new groups so you can manage many additional `configurations`.
 
 ### 1.1.0
 
@@ -54,47 +77,7 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 - Fixed: Security updates from dependencies applied
 
-### 1.0.8
-
-- NPM updates
-
-### 1.0.5
-
-- Fix: Compatibility with older version of configuration file
-
-### 1.0.4
-
-- New: New option to enable or disable a group of terminals.
-
-```json
-{
-    "version": "1.0.4",
-    "groups": [
-        {
-            "name": "Group number 1",
-            "description": "Working with microservices a and b",
-            "enabled": true,
-            "terminals": [
-
-```
-
-### 1.0.3
-
-- Fixed: correct binding of terminal caused by manual folder selection.
-- Changed: Command name to `TLoader: Load Terminals`
-
-### 1.0.2
-
-- Set icon
-- Organize terminals by groups
-
-### 1.0.1
-
-- Some minor fixes
-
-### 1.0.0
-
-- Initial release.
+[See full change log here](CHANGELOG.md)
 
 ---
 

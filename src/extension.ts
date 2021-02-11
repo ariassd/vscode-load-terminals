@@ -3,7 +3,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { Terminal } from "./Terminal";
+import { Terminal, TerminalGroup } from "./Terminal";
 import { ConfigurationFile } from "./ConfigurationFile";
 var packageJson: any = require("../package.json");
 
@@ -37,14 +37,18 @@ const wsSettingsSection: string = "terminalLoader";
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  // Use the console to output diagnostic information (console.log) and errors (console.error)
-  // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "Terminal Loader" is now active!');
 
-  // The command has been defined in the package.json file
-  // Now provide the implementation of the command with registerCommand
-  // The commandId parameter must match the command field in package.json
-  let disposable = vscode.commands.registerCommand("extension.loadTerminals", () => {
+  let dispLoadTerminals = vscode.commands.registerCommand("extension.loadTerminals", () => executeCommand({ groups: ["groups"] }));
+
+  let dispLoadTrmGroups = vscode.commands.registerCommand("extension.loadTrmGroups", async () => {
+    const inputData = await vscode.window.showInputBox({
+      placeHolder: "groups,groups-a,groups-b",
+    });
+    executeCommand({ groups: inputData?.split(",") || [] });
+  });
+
+  async function executeCommand(options: { groups: string[] }) {
     const tLoaderSettings = vscode.workspace.getConfiguration(wsSettingsSection);
     let conf_folderPath: string = "workspaceConfiguration";
 
@@ -68,32 +72,41 @@ export function activate(context: vscode.ExtensionContext) {
     if (confFolderPath) {
       vscode.window.showInformationMessage(`Load Terminals is working on!`);
       if (!fs.existsSync(path.join(confFolderPath, conf_filename))) {
-        fs.writeFile(path.join(confFolderPath, conf_filename), JSON.stringify(jsonFile), (err) => {
+        fs.writeFile(path.join(confFolderPath, conf_filename), JSON.stringify(jsonFile), async (err) => {
           if (err) {
             vscode.window.showErrorMessage("Load terminal: Default configuration file could´t be created");
           } else {
             vscode.window.showInformationMessage(`Configuration file was created at ${path.join(confFolderPath, conf_filename)}`);
-            loadTerminals(confFolderPath);
+            for (const group of options.groups) {
+              await loadTerminals(confFolderPath, group.trim());
+            }
           }
         });
       } else {
-        loadTerminals(confFolderPath);
+        for (const group of options.groups) {
+          await loadTerminals(confFolderPath, group.trim());
+        }
       }
     } else {
       vscode.window.showInformationMessage("Please open a folder before start");
     }
-  });
+  }
 
-  async function loadTerminals(folderPath: string) {
+  async function loadTerminals(folderPath: string, groups: string) {
     let cnf = fs.readFileSync(path.join(folderPath, conf_filename), "utf8");
     let configuration: ConfigurationFile = JSON.parse(cnf);
+    // @ts-ignore
+    const groupToRun: TerminalGroup[] = configuration[groups];
+    if (!groupToRun || groupToRun.length == 0) {
+      return;
+    }
 
     var terminalNumber = 0;
-    if (configuration.groups.length >= 1) {
+    if (groupToRun.length >= 1) {
       // vscode.window.showWarningMessage("Please be patient, vscode is busy creating terminals");
     }
-    for (var i = 0; i < configuration.groups.length; i++) {
-      let group = configuration.groups[i];
+    for (var i = 0; i < groupToRun.length; i++) {
+      let group = groupToRun[i];
       if (group.enabled !== false) {
         // console.log(group.terminals[0]);
         let fstTerm = await createTerminal(false, group.terminals[0]);
@@ -133,7 +146,8 @@ export function activate(context: vscode.ExtensionContext) {
     });
   }
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(dispLoadTerminals);
+  context.subscriptions.push(dispLoadTrmGroups);
 }
 
 // this method is called when your extension is deactivated

@@ -17,7 +17,8 @@
     "Debuggers"
   ],
   "activationEvents": [
-    "onCommand:extension.loadTerminals"
+    "onCommand:extension.loadTerminals",
+    "onCommand:extension.loadTrmGroups"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -25,6 +26,10 @@
       {
         "command": "extension.loadTerminals",
         "title": "TLoader: Load Terminals"
+      },
+      {
+        "command": "extension.loadTrmGroups",
+        "title": "TLoader: Load Groups"
       }
     ]
   },
