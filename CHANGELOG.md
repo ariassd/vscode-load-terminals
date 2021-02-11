@@ -1,4 +1,4 @@
-# Change Log
+# Load terminals change log
 
 ### 1.2.0
 
