@@ -1,5 +1,11 @@
 # Load terminals change log
 
+### 1.2.1
+
+- Fix: Naming new terminals ( not splitted ) 
+- Know bug: Renaming splitted terminal does not work with vscode version 1.57.1
+- Command list on configuration, Now you can define a list of commands to be executed in the configuration file.
+
 ### 1.2.0
 
 - New command `TLoader: Load Groups` now you can extend config file adding new groups so you can manage many additional `configurations`.

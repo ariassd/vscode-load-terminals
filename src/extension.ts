@@ -15,8 +15,18 @@ const jsonFile: ConfigurationFile = {
       description: "First group of terminals and commands",
       enabled: true,
       terminals: [
-        { name: "--1g-1c", path: ".", cmd: "echo first group first console!", num: 0 },
-        { name: "--1g-2c", path: ".", cmd: "echo first group second console!", num: 0 },
+        {
+          name: "--1g-1c",
+          path: ".",
+          cmd: ["echo first group first console!"],
+          num: 0,
+        },
+        {
+          name: "--1g-2c",
+          path: ".",
+          cmd: ["echo first group second console!"],
+          num: 0,
+        },
       ],
     },
     {
@@ -24,8 +34,18 @@ const jsonFile: ConfigurationFile = {
       description: "Second group of terminals and commands",
       enabled: true,
       terminals: [
-        { name: "--2g-1c", path: ".", cmd: "echo Second group first console!", num: 0 },
-        { name: "--2g-2c", path: ".", cmd: "echo Second group second console!", num: 0 },
+        {
+          name: "--2g-1c",
+          path: ".",
+          cmd: ["echo Second group first console!"],
+          num: 0,
+        },
+        {
+          name: "--2g-2c",
+          path: ".",
+          cmd: ["echo Second group second console!"],
+          num: 0,
+        },
       ],
     },
   ],
@@ -37,27 +57,35 @@ const wsSettingsSection: string = "terminalLoader";
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Congratulations, your extension "Terminal Loader" is now active!');
+  let dispLoadTerminals = vscode.commands.registerCommand(
+    "extension.loadTerminals",
+    () => executeCommand({ groups: ["groups"] })
+  );
 
-  let dispLoadTerminals = vscode.commands.registerCommand("extension.loadTerminals", () => executeCommand({ groups: ["groups"] }));
-
-  let dispLoadTrmGroups = vscode.commands.registerCommand("extension.loadTrmGroups", async () => {
-    const inputData = await vscode.window.showInputBox({
-      placeHolder: "groups,groups-a,groups-b",
-    });
-    executeCommand({ groups: inputData?.split(",") || [] });
-  });
+  let dispLoadTrmGroups = vscode.commands.registerCommand(
+    "extension.loadTrmGroups",
+    async () => {
+      const inputData = await vscode.window.showInputBox({
+        placeHolder: "groups,groups-a,groups-b",
+      });
+      executeCommand({ groups: inputData?.split(",") || [] });
+    }
+  );
 
   async function executeCommand(options: { groups: string[] }) {
-    const tLoaderSettings = vscode.workspace.getConfiguration(wsSettingsSection);
+    const tLoaderSettings =
+      vscode.workspace.getConfiguration(wsSettingsSection);
     let conf_folderPath: string = "workspaceConfiguration";
 
     if (tLoaderSettings.has("config")) {
-      const settings: any = JSON.parse(JSON.stringify(tLoaderSettings.get("config")));
+      const settings: any = JSON.parse(
+        JSON.stringify(tLoaderSettings.get("config"))
+      );
       conf_folderPath = settings.directory || conf_folderPath;
     }
 
-    const rootSpaceFolders = vscode.workspace.workspaceFolders as vscode.WorkspaceFolder[];
+    const rootSpaceFolders = vscode.workspace
+      .workspaceFolders as vscode.WorkspaceFolder[];
     var folderPath = vscode.workspace.rootPath as string;
     var confFolderPath = path.join(folderPath, conf_folderPath);
 
@@ -70,18 +98,29 @@ export function activate(context: vscode.ExtensionContext) {
     }
     if (!fs.existsSync(confFolderPath)) fs.mkdirSync(confFolderPath);
     if (confFolderPath) {
-      vscode.window.showInformationMessage(`Load Terminals is working on!`);
+      // vscode.window.showInformationMessage(`Opening terminals!`);
       if (!fs.existsSync(path.join(confFolderPath, conf_filename))) {
-        fs.writeFile(path.join(confFolderPath, conf_filename), JSON.stringify(jsonFile), async (err) => {
-          if (err) {
-            vscode.window.showErrorMessage("Load terminal: Default configuration file could´t be created");
-          } else {
-            vscode.window.showInformationMessage(`Configuration file was created at ${path.join(confFolderPath, conf_filename)}`);
-            for (const group of options.groups) {
-              await loadTerminals(confFolderPath, group.trim());
+        fs.writeFile(
+          path.join(confFolderPath, conf_filename),
+          JSON.stringify(jsonFile),
+          async (err) => {
+            if (err) {
+              vscode.window.showErrorMessage(
+                "Load terminal: Default configuration file could´t be created"
+              );
+            } else {
+              vscode.window.showInformationMessage(
+                `Configuration file was created at ${path.join(
+                  confFolderPath,
+                  conf_filename
+                )}`
+              );
+              for (const group of options.groups) {
+                await loadTerminals(confFolderPath, group.trim());
+              }
             }
           }
-        });
+        );
       } else {
         for (const group of options.groups) {
           await loadTerminals(confFolderPath, group.trim());
@@ -109,7 +148,7 @@ export function activate(context: vscode.ExtensionContext) {
       let group = groupToRun[i];
       if (group.enabled !== false) {
         // console.log(group.terminals[0]);
-        let fstTerm = await createTerminal(false, group.terminals[0]);
+        let fstTerm: any = await createTerminal(false, group.terminals[0]);
         group.terminals[0].num = terminalNumber++;
         for (var j = 1; j < group.terminals.length; j++) {
           // console.log(group.terminals[j]);
@@ -121,28 +160,75 @@ export function activate(context: vscode.ExtensionContext) {
     }
   }
 
-  function createTerminal(horizontal: boolean, terminal: Terminal): Promise<vscode.Terminal | undefined> {
+  function createTerminal(
+    horizontal: boolean,
+    terminal: Terminal
+  ): Promise<vscode.Terminal | undefined> {
     return new Promise<vscode.Terminal | undefined>((resolve, reject) => {
-      // var command = "workbench.action.terminal.new";
-      var command = "workbench.action.terminal.new";
       if (horizontal === true) {
-        command = "workbench.action.terminal.split";
-      }
-
-      // console.log(terminal.name, "executing command ", command);
-      vscode.commands.executeCommand(command).then((e) => {
-        // console.log(terminal.name, "command finishes execution ", e);
-        let newTerminal = vscode.window.activeTerminal;
-        // console.log(terminal.name, "On did open terminal ", e);
-        newTerminal?.show();
-        terminal.trm = newTerminal;
-        vscode.commands.executeCommand("workbench.action.terminal.renameWithArg", { name: terminal.name }).then(() => {
-          newTerminal?.sendText(`cd ${terminal.path}`, true);
-          newTerminal?.sendText(terminal.cmd, true);
-          // listener.dispose();
-          resolve(newTerminal);
+        const command = "workbench.action.terminal.split";
+        vscode.commands.executeCommand(command).then((e) => {
+          // console.log(terminal.name, "command finishes execution ", e);
+          let newTerminal = vscode.window.activeTerminal;
+          // console.log(terminal.name, "On did open terminal ", e);
+          newTerminal?.show(false);
+          terminal.trm = newTerminal;
+          vscode.commands
+            .executeCommand("workbench.action.terminal.renameWithArg", {
+              name: terminal.name,
+            })
+            .then(() => {
+              vscode.commands
+                .executeCommand("workbench.action.terminal.clear")
+                .then(() => {
+                  newTerminal?.sendText(`cd ${terminal.path}`, true);
+                  if (
+                    Object.prototype.toString.call(terminal.cmd) ===
+                    "[object String]"
+                  ) {
+                    // @ts-ignore
+                    newTerminal?.sendText(terminal.cmd, true);
+                  } else {
+                    for (const cmd of terminal.cmd) {
+                      newTerminal?.sendText(cmd, true);
+                    }
+                  }
+                  resolve(newTerminal);
+                });
+            });
         });
-      });
+      } else {
+        let newTerminal = vscode.window.createTerminal({
+          name: terminal.name,
+          //shellPath?: 'string',
+          ///shellArgs?: 'string[] | string';
+          //cwd?: 'string | Uri';
+          //env?: { [key: string]: string | null | undefined };
+          //strictEnv?: boolean;
+          //hideFromUser?: boolean;
+          message: terminal.name,
+          // iconPath: Uri | { light: Uri; dark: Uri } | ThemeIcon;
+        } as vscode.TerminalOptions);
+        newTerminal?.show();
+
+        vscode.commands
+          .executeCommand("workbench.action.terminal.clear")
+          .then(() => {
+            newTerminal?.sendText(`cd ${terminal.path}`, true);
+            if (
+              Object.prototype.toString.call(terminal.cmd) === "[object String]"
+            ) {
+              // @ts-ignore
+              newTerminal?.sendText(terminal.cmd, true);
+            } else {
+              for (const cmd of terminal.cmd) {
+                newTerminal?.sendText(cmd, true);
+              }
+            }
+
+            resolve(newTerminal);
+          });
+      }
     });
   }
 

@@ -1,6 +1,6 @@
 # Terminal loader
 
-This extension allow to open multiple terminals stacked side by side and run a different command on each one. Perfect to work in a workspace with multiple projects.
+This extension allows to open multiple terminals stacked side by side and run a different command on each one. Perfect to work in a workspace with multiple projects.
 
 ## Features
 
@@ -21,21 +21,47 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ![explorer](assets/Sample.gif)
 
-- `TLoader: Load Groups` - Open a group of terminals in file `LoadTerminal.json`. For the following example you can select groups or testEnv or both (groups,testEnv)
+- `TLoader: Load Groups` - Open a group of terminals in file `LoadTerminal.json`. For the following example you can select groups or testEnv or both (groups,testEnv). A sample file is created when you run the extension the first time.
 
 ⚠️ IMPORTANT: Too many groups or crowded groups could cause VSCode freezing or stop working!
 
-```json
+```javascript
 {
-  "version": "1.1.0",
-  "groups": [
-    {
-      ...
-    }
-  ],
-  "testEnv": [
-    ...
-  ]
+   "version":"packageJson.version",
+   "customGroup": [ ] // 👈 Defining a custom group to be loaded with `TLoader: Load Groups`
+   "groups":[ // 👈 this is the default group
+      {
+         "name":"First group: Sample",
+         "description":"First group of terminals and commands",
+         "enabled":true,
+         "terminals":[
+            {
+               "name":"--1g-1c",
+               "path":".",
+               "cmd":[
+                  "echo first group first console!"
+               ],
+               "num":0
+            }
+         ]
+      },
+      {
+         "name":"Second group: Sample",
+         "description":"Second group of terminals and commands",
+         "enabled":true,
+         "terminals":[
+            {
+               "name":"--2g-1c",
+               "path":".",
+               "cmd":[
+                  "echo Second group first console!"
+               ],
+               "num":0
+            }
+         ]
+      }
+   ]
+
 }
 ```
 
@@ -64,18 +90,12 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ## Latest release notes
 
-### 1.2.0
+### 1.2.1
 
-- New command `TLoader: Load Groups` now you can extend config file adding new groups so you can manage many additional `configurations`.
+- Fix: Naming new terminals ( not splitted ) 
+- Know bug: Renaming splitted terminal does not work with vscode version 1.57.1
+- Command list on configuration, Now you can define a list of commands to be executed in the configuration file.
 
-### 1.1.0
-
-- Fixed: Issues lading terminals with vscode 1.53
-- New: configuration in `.vscode/settings`, now you will be able to define the folder for the file `LoadTerminal.json`
-
-### 1.0.10
-
-- Fixed: Security updates from dependencies applied
 
 [See full change log here](CHANGELOG.md)
 
@@ -91,11 +111,15 @@ Contact via [Email](ariassd@gmail.com) or open an issue at this project's [Git R
 _Thank you Nick Armitage for reporting issues._
 _Thank you Leandro Silva and Anton Olsson for suggestions._
 
-**Enjoy it!**
+## Stay in touch
 
-```
-{
-    name: "Luis Arias",
-    year: 2021
-}
-```
+- Author - Luis Arias 2021 <<ariassd@gmail.com>>
+  [GitHub profile](https://github.com/ariassd)
+
+## License
+
+This software is licensed under [MIT License](LICENSE)
+
+![](assets/MIT.png) ![](assets/open-source.png)
+
+May 2021
