@@ -65,20 +65,20 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 }
 ```
 
-## Workspace settings.
+## Workspace settings ☑
 
 #### Setting Section: `terminalLoader.config`
 
-- directory: Defines the name or location for the file `LoadTerminal.json`
+- `directory`: Defines the name or location for the file `LoadTerminal.json`, relative to the workspace's parent folder.
 
-```json
-{
-  ...
-  "terminalLoader.config": {
-    "directory": ".vscode",
+  ```json
+  {
+    ...
+    "terminalLoader.config": {
+      "directory": ".vscode",
+    }
   }
-}
-```
+  ```
 
 # License
 
