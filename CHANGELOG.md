@@ -1,8 +1,20 @@
 # Load terminals change log
 
+### 2.0.0
+
+> Note! this version broke the original configuration file.
+
+- Change: Remove `workspaceConfiguration` folder. Configuration file (`LoadTerminal.json`) moved to `.vscode/terminal-loader.json`
+- Change Some code refactor and libraries updates
+
+Release additional notes:
+
+- Sometimes when you define a split the behavior is not the expected due some issues with promises and thenable
+- Unfortunately it is not possible yet assign terminal icons and terminal colors
+
 ### 1.2.1
 
-- Fix: Naming new terminals ( not splitted ) 
+- Fix: Naming new terminals ( not splitted )
 - Know bug: Renaming splitted terminal does not work with vscode version 1.57.1
 - Command list on configuration, Now you can define a list of commands to be executed in the configuration file.
 

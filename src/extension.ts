@@ -3,8 +3,10 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { Terminal, TerminalGroup } from "./Terminal";
-import { ConfigurationFile } from "./ConfigurationFile";
+import { Terminal, TerminalGroup } from "./terminal";
+import { ConfigurationFile } from "./configuration-file";
+import { Settings } from "./settings";
+import { resolve } from "path/posix";
 var packageJson: any = require("../package.json");
 
 const jsonFile: ConfigurationFile = {
@@ -51,12 +53,17 @@ const jsonFile: ConfigurationFile = {
   ],
 };
 
-const conf_filename: string = "LoadTerminal.json";
-const wsSettingsSection: string = "terminalLoader";
+const conf_filename: string = "terminal-loader.json";
+const wsSettingsSection: string = "terminal-loader";
+const defaultConfig = { directory: ".vscode" };
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
+  if (!vscode.workspace.workspaceFolders) {
+    return;
+  }
+
   let dispLoadTerminals = vscode.commands.registerCommand(
     "extension.loadTerminals",
     () => executeCommand({ groups: ["groups"] })
@@ -73,35 +80,41 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   async function executeCommand(options: { groups: string[] }) {
-    const tLoaderSettings =
-      vscode.workspace.getConfiguration(wsSettingsSection);
-    let conf_folderPath: string = "workspaceConfiguration";
+    let vscSettings = await vscode.workspace.getConfiguration(
+      wsSettingsSection
+    );
+    const scope = vscode.workspace.workspaceFolders
+      ? vscode.ConfigurationTarget.WorkspaceFolder
+      : vscode.ConfigurationTarget.Workspace;
 
-    if (tLoaderSettings.has("config")) {
-      const settings: any = JSON.parse(
-        JSON.stringify(tLoaderSettings.get("config"))
-      );
-      conf_folderPath = settings.directory || conf_folderPath;
+    let settings: Settings = (await vscSettings.get("config")) as Settings;
+
+    if (!settings.directory) {
+      settings.directory = defaultConfig.directory;
+      await (async () =>
+        new Promise((resolve, reject) => {
+          vscSettings.update("config", { ...defaultConfig }).then(() => {
+            logger("updated full");
+            resolve(true);
+          });
+        }))();
+      logger("get config again", defaultConfig);
+      //settings = (await vscSettings.get("config")) as Settings;
+      logger("get config again", settings);
     }
 
-    const rootSpaceFolders = vscode.workspace
-      .workspaceFolders as vscode.WorkspaceFolder[];
-    var folderPath = vscode.workspace.rootPath as string;
-    var confFolderPath = path.join(folderPath, conf_folderPath);
+    const settingsFolder = path.isAbsolute(settings.directory)
+      ? settings.directory
+      : path.join(getWorkspaceFolder(), settings.directory);
 
-    if (!folderPath) {
-      vscode.window.showErrorMessage("No folder is open");
-    }
+    logger("directory", settingsFolder);
 
-    if (rootSpaceFolders?.length >= 2) {
-      confFolderPath = path.join(folderPath, "..", conf_folderPath);
-    }
-    if (!fs.existsSync(confFolderPath)) fs.mkdirSync(confFolderPath);
-    if (confFolderPath) {
-      // vscode.window.showInformationMessage(`Opening terminals!`);
-      if (!fs.existsSync(path.join(confFolderPath, conf_filename))) {
+    if (!fs.existsSync(settingsFolder))
+      fs.mkdirSync(settingsFolder, { recursive: true });
+    if (settingsFolder) {
+      if (!fs.existsSync(path.join(settingsFolder, conf_filename))) {
         fs.writeFile(
-          path.join(confFolderPath, conf_filename),
+          path.join(settingsFolder, conf_filename),
           JSON.stringify(jsonFile),
           async (err) => {
             if (err) {
@@ -111,19 +124,19 @@ export function activate(context: vscode.ExtensionContext) {
             } else {
               vscode.window.showInformationMessage(
                 `Configuration file was created at ${path.join(
-                  confFolderPath,
+                  settings.directory,
                   conf_filename
                 )}`
               );
               for (const group of options.groups) {
-                await loadTerminals(confFolderPath, group.trim());
+                await loadTerminals(settingsFolder, group.trim());
               }
             }
           }
         );
       } else {
         for (const group of options.groups) {
-          await loadTerminals(confFolderPath, group.trim());
+          await loadTerminals(settingsFolder, group.trim());
         }
       }
     } else {
@@ -132,6 +145,12 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   async function loadTerminals(folderPath: string, groups: string) {
+    const current = vscode.window.terminals;
+    for (const term of current) {
+      logger("term", term.state);
+      term.dispose();
+    }
+
     let cnf = fs.readFileSync(path.join(folderPath, conf_filename), "utf8");
     let configuration: ConfigurationFile = JSON.parse(cnf);
     // @ts-ignore
@@ -160,7 +179,7 @@ export function activate(context: vscode.ExtensionContext) {
     }
   }
 
-  function createTerminal(
+  async function createTerminal(
     horizontal: boolean,
     terminal: Terminal
   ): Promise<vscode.Terminal | undefined> {
@@ -193,7 +212,15 @@ export function activate(context: vscode.ExtensionContext) {
                       newTerminal?.sendText(cmd, true);
                     }
                   }
+
                   resolve(newTerminal);
+                  // vscode.commands
+                  //   .executeCommand("workbench.action.terminal.changeIcon", {
+                  //     icon: "circuit-board",
+                  //   })
+                  //   .then(() => {
+                  //     resolve(newTerminal);
+                  //   });
                 });
             });
         });
@@ -238,3 +265,22 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
+function logger(title: string, ...value: any) {
+  console.log(`[TLoader]: ${title}`, ...value);
+}
+
+//https://itnext.io/how-to-make-a-visual-studio-code-extension-77085dce7d82
+// takes an array of workspace folder objects and return
+// workspace root, assumed to be the first item in the array
+export const getWorkspaceFolder = (): string => {
+  const folders = vscode.workspace.workspaceFolders as vscode.WorkspaceFolder[];
+  if (!folders) {
+    return "";
+  }
+
+  const folder = folders[0] || {};
+  const uri = folder.uri;
+
+  return uri.fsPath;
+};

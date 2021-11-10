@@ -1,3 +1,5 @@
+![explorer](assets/header.png)
+
 # Terminal loader
 
 This extension allows to open multiple terminals stacked side by side and run a different command on each one. Perfect to work in a workspace with multiple projects.
@@ -5,7 +7,7 @@ This extension allows to open multiple terminals stacked side by side and run a 
 ## Features
 
 Allow to configure and run pre configured commands.
-Add a configuration file called LoadTerminal.json on the root folder.
+Add a configuration file in `.vscode` folder.
 
 ## Installation ⬇
 
@@ -16,12 +18,12 @@ Or launch the vscode quick open (<kbd>⌘</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<
 
 The extension commands that can be accessed from the command pallet (<kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> ):
 
-- `TLoader: Load Terminals` - Open pre configured terminals in file `LoadTerminal.json`
-  ⚠️ IMPORTANT: A group called `groups` must exists in the configuration file for this, you can add extra groups, but please don't remove this one!
+- `TLoader: Load Terminals` - Open pre configured terminals in file `.vscode/terminal-loader.json`
+  ⚠️ IMPORTANT: A group called `groups` must exists in the configuration file for this, you can add extra groups, but don't remove this one!
 
 ![explorer](assets/Sample.gif)
 
-- `TLoader: Load Groups` - Open a group of terminals in file `LoadTerminal.json`. For the following example you can select groups or testEnv or both (groups,testEnv). A sample file is created when you run the extension the first time.
+- `TLoader: Load Groups` - Open a group of terminals in file `terminal-loader.json`. For the following example you can select groups or testEnv or both (groups,testEnv). A sample file is created when you run the extension the first time.
 
 ⚠️ IMPORTANT: Too many groups or crowded groups could cause VSCode freezing or stop working!
 
@@ -67,14 +69,14 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ## Workspace settings ☑
 
-#### Setting Section: `terminalLoader.config`
+#### Setting Section: `terminal-loader`
 
-- `directory`: Defines the name or location for the file `LoadTerminal.json`, relative to the workspace's parent folder.
+- `directory`: Defines the name or location for the file `terminal-loader.json`, relative to the workspace's parent folder or absolute path
 
   ```json
   {
     ...
-    "terminalLoader.config": {
+    "terminal-loader.config": {
       "directory": ".vscode",
     }
   }
@@ -86,16 +88,21 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ## Requirements
 
-- Visual Studio Code 1.53.0 or higher
+- Visual Studio Code 1.62.0 or higher
 
 ## Latest release notes
 
-### 1.2.1
+### 2.0.0
 
-- Fix: Naming new terminals ( not splitted ) 
-- Know bug: Renaming splitted terminal does not work with vscode version 1.57.1
-- Command list on configuration, Now you can define a list of commands to be executed in the configuration file.
+> Note! this version broke the original configuration file.
 
+- Change: Remove `workspaceConfiguration` folder. Configuration file (`LoadTerminal.json`) moved to `.vscode/terminal-loader.json`
+- Change Some code refactor and libraries updates
+
+Release additional notes:
+
+- Sometimes when you define a split the behavior is not the expected due some issues with promises and thenable
+- Unfortunately it is not possible yet assign terminal icons and terminal colors
 
 [See full change log here](CHANGELOG.md)
 
