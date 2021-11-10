@@ -17,8 +17,8 @@ Or launch the vscode quick open (<kbd>⌘</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<
 Published versions
 
 - [See and download all versions](https://github.com/ariassd/vscode-load-terminals/tree/v2/release)
-- [v1.1.0](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ariassd/vsextensions/terminal-loader/1.1.0/vspackage)
-- [v1.2.1](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ariassd/vsextensions/terminal-loader/1.2.1/vspackage)
+- [v1.1.0](https://marketplace.visualstudio.com/items?itemName=ariassd.terminal-loader)
+- [v1.2.1](https://marketplace.visualstudio.com/items?itemName=ariassd.terminal-loader)
 - [v2.0.0](https://github.com/ariassd/vscode-load-terminals/tree/v2/release)
 
 ## Commands 🗣
