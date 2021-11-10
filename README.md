@@ -12,6 +12,15 @@ Add a configuration file called LoadTerminal.json on the root folder.
 In vscode marketplace search and install "Terminal loader".  
 Or launch the vscode quick open (<kbd>⌘</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<kbd>p</kbd>) and run `ext install terminal-loader`
 
+## Releases
+
+Published versions
+
+- [See and download all versions](https://github.com/ariassd/vscode-load-terminals/tree/v2/release)
+- [v1.1.0](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ariassd/vsextensions/terminal-loader/1.1.0/vspackage)
+- [v1.2.1](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ariassd/vsextensions/terminal-loader/1.2.1/vspackage)
+- [v2.0.0](https://github.com/ariassd/vscode-load-terminals/tree/v2/release)
+
 ## Commands 🗣
 
 The extension commands that can be accessed from the command pallet (<kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> ):
@@ -92,10 +101,9 @@ The extension commands that can be accessed from the command pallet (<kbd>⌘</k
 
 ### 1.2.1
 
-- Fix: Naming new terminals ( not splitted ) 
+- Fix: Naming new terminals ( not splitted )
 - Know bug: Renaming splitted terminal does not work with vscode version 1.57.1
 - Command list on configuration, Now you can define a list of commands to be executed in the configuration file.
-
 
 [See full change log here](CHANGELOG.md)
 
