@@ -14,6 +14,15 @@ Add a configuration file in `.vscode` folder.
 In vscode marketplace search and install "Terminal loader".  
 Or launch the vscode quick open (<kbd>⌘</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<kbd>p</kbd>) and run `ext install terminal-loader`
 
+## Releases
+
+Published versions
+
+- [All versions](release/)
+- [v1.1.0](release/terminal-loader-1.1.0.vsix)
+- [v1.2.1](release/terminal-loader-1.2.1.vsix)
+- [v2.0.0](release/terminal-loader-2.0.0.vsix)
+
 ## Commands 🗣
 
 The extension commands that can be accessed from the command pallet (<kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd> ):
