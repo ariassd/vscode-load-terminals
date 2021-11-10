@@ -18,10 +18,10 @@ Or launch the vscode quick open (<kbd>⌘</kbd>+<kbd>p</kbd> | <kbd>Ctrl</kbd>+<
 
 Published versions
 
-- [All versions](release/)
-- [v1.1.0](release/terminal-loader-1.1.0.vsix)
-- [v1.2.1](release/terminal-loader-1.2.1.vsix)
-- [v2.0.0](release/terminal-loader-2.0.0.vsix)
+- [See and download all versions](release/)
+- [v1.1.0](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ariassd/vsextensions/terminal-loader/1.1.0/vspackage)
+- [v1.2.1](https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ariassd/vsextensions/terminal-loader/1.2.1/vspackage)
+- [v2.0.0](release/)
 
 ## Commands 🗣
 
